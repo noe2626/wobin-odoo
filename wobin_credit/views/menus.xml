@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+    
+        <menuitem name="Creditos" id="credit_root" sequence="40"  web_icon="wobin_credit,static/description/credit_icon.png" groups="wobin_credit.group_credit_manager,wobin_credit.group_credit_user"/>
+
+        <menuitem id="preapplication_main_menu" name="Pre-aplicación" parent="credit_root" sequence="1"/>
+
+        <menuitem id="params_menu" name="Generales" parent="credit_root" sequence="2"/>
+
+        <menuitem id="reports_menu" name="Informes" parent="credit_root" sequence="3" />
+    
+    </data>
+
+</odoo>

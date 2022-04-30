@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--================================================Boletas usuario interno=======================================-->
+    <record model="ir.ui.view" id="form_view_ticket">
+        <field name="name">bascula.ticket.form</field>
+        <field name="model">bascula.ticket</field>
+        <field name="arch" type="xml">
+            <form string="Boletas">
+                <header>
+                    <button name="save_first" type="object" states="draft" string="Guardar pesada" class="btn-primary" />
+                    <button name="save_second" type="object" states="first" string="Guardar pesada" class="btn-primary" />
+                    <button name="cancel_ticket" type="object" states="first,second" string="Cancelar" groups="wobin_bascula.group_bascula_cancel"/>
+                    <button name="%(wobin_bascula.report_ticket_external)d" string="Imprimir boleta" type="action" class="btn-primary" attrs="{'invisible':['|',('type_ticket', '=', 'public'),('state', '!=', 'second')]}" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,first,second" />
+                </header>
+                <sheet>
+                    <group>
+                        <h1>
+                            <field name="name" readonly="1" force_save="1" />
+                        </h1>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="origin_ticket" attrs="{'invisible':[('origin_ticket', '=', False)]}" />
+                            <field name="company_id" invisible="1" />
+                            <field name="type_ticket" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                            <field name="operation_type" attrs="{'readonly':[('state', '!=', 'draft')],'required':[('type_ticket', '=', 'internal')],'invisible':[('type_ticket', '=', 'public')]}"/>
+                            <field name="transfer_type"  attrs="{'readonly':[('state', '!=', 'draft')],'required':[('operation_type', '=', 'ti')],'invisible':[('operation_type', '!=', 'ti')]}"/>
+                            <field name="user"/>
+                            <field name="analysis_id" attrs="{'invisible':[('type_ticket', '=', 'public')], 'readonly':[('state', '!=', 'draft')], 'invisible':[('type_ticket', '=', 'public')]}"/>
+                            <field name="branch" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                            <field name="contact" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                            <field name="product" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                            <field name="price" attrs="{'readonly':[('purchase_id', '!=', False)], 'invisible':['|',('type_ticket', '=', 'public'),('operation_type', '!=', 'in')]}"/>
+                            <field name="related_ticket" attrs="{'invisible':[('related_ticket', '=', False)]}" />
+                            <field name="purchase_id" attrs="{'invisible':[('purchase_id', '=', False)]}" />
+                            <field name="sale_id" attrs="{'invisible':[('operation_type', '!=', 'out')],'readonly':[('state', '!=', 'draft')]}" />
+                            <field name="picking_id" attrs="{'invisible':[('picking_id', '=', False)]}" />
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="driver" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                    <group>
+                            <group>
+                                <field name="type_vehicle" required="1" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                                <field name="plate_vehicle" required="1" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                            </group>
+                            <group>
+                                <field name="plate_trailer" attrs="{'readonly':[('state', '!=', 'draft')], 'invisible':['|',('type_vehicle', '=', 'van'),('type_vehicle', '=', 'torton')], 'required':['|',('type_vehicle', '=', 'trailer'),('type_vehicle', '=', 'full')]}" />
+                                <field name="plate_second_trailer" attrs="{'readonly':[('state', '!=', 'draft')], 'invisible':[('type_vehicle', '!=', 'full')], 'required':[('type_vehicle', '=', 'full')]}" />
+                            </group>
+                    </group>
+                    <notebook>
+                        <page string="Pesadas" name="bascula_page">
+                            <br/>
+                            <group>
+                                <field name="folio" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="first_weight" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                                </group>
+                                <group>
+                                    <field name="first_date"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="second_weight" attrs="{'invisible':[('state', '=', 'draft')], 'readonly':[('state', '=', 'second')]}"/>
+                                </group>
+                                <group>
+                                    <field name="second_date" attrs="{'invisible':[('state', '=', 'draft')]}"/>
+                                </group>
+                            </group>
+                            <group attrs="{'invisible':[('state', '!=', 'second')]}">
+                                <field name="gross_weight"/>
+                                <field name="tare_weight"/>
+                                <field name="net_weight"/>
+                            </group>
+                        </page>
+                        <page string="Calidad" name="quality_page" attrs="{'invisible':[('type_ticket', '=', 'public')]}">
+                            <br />
+                            <group>
+                                <field name="quality_id"/>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="humidity"/>
+                                    <field name="impurity"/>
+                                    <field name="density"/>
+                                    <field name="temperature"/>
+                                </group>
+                                <group>
+                                    <field name="humidity_discount"/>
+                                    <field name="impurity_discount"/>
+                                </group>
+                            </group>
+                            <br />
+                            <field name="params_id">
+                                <tree editable="bottom" decoration-danger="value &gt; max_value" delete="0">
+                                    <field name="quality_params_id" readonly="True" force_save="1" />
+                                    <field name="max_value" />
+                                    <field name="unit" />
+                                    <field name="value" />
+                                </tree>
+                            </field>
+                            <group>
+                                <group>
+                                    <field name="sum_damage" />
+                                </group>
+                                <group>
+                                    <field name="sum_broken" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Descuentos" name="discount_page" attrs="{'invisible':[('type_ticket', '=', 'public')]}">
+                            <br />
+                            <group>
+                                <group>
+                                    <field name="humidity_total_discount" />
+                                    <field name="impurity_total_discount" />
+                                    <field name="discount" />
+                                </group>
+                                <group>
+                                    <field name="total_weight" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="tree_view_ticket" model="ir.ui.view">
+        <field name="name">bascula.ticket.tree</field>
+        <field name="model">bascula.ticket</field>
+        <field name="arch" type="xml">
+            <tree string="Boletas" delete="0" default_order="id desc">
+                <field name="name" />
+                <field name="date" />
+                <field name="product" />
+                <field name="net_weight_analysis" />
+                <field name="humidity_total_discount" />
+                <field name="impurity_total_discount" />
+                <field name="state" />
+                <field name="type_ticket" />
+                <field name="purchase_id" />
+                <field name="picking_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="tickets_bascula" model="ir.actions.act_window">
+        <field name="name">Boletas</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">bascula.ticket</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+            Click to add a track value.
+            </p>
+        </field>
+    </record>
+
+    <record id="bascula_tree_ticket_action" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="tickets_bascula" />
+        <field name="view_id" ref="tree_view_ticket" />
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="bascula_form_ticket_action" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="tickets_bascula" />
+        <field name="view_id" ref="form_view_ticket" />
+        <field name="view_mode">form</field>
+    </record>
+
+    <menuitem name="Bascula" id="bascula_root" sequence="41" web_icon="wobin_bascula,static/description/bascula_icon.png" groups="wobin_bascula.group_bascula_internal,wobin_bascula.group_bascula_public"/>
+
+    <menuitem id="bascula_ticket_menu" name="Boletas" parent="bascula_root" action="tickets_bascula" sequence="1" groups="wobin_bascula.group_bascula_internal"/>
+
+    <!--================================================Boletas usuario publico=======================================-->
+    <record model="ir.ui.view" id="form_view_ticket_public">
+        <field name="name">bascula.ticket.form</field>
+        <field name="model">bascula.ticket</field>
+        <field name="arch" type="xml">
+            <form string="Boletas">
+                <header>
+                    <button name="save_first" type="object" states="draft" string="Guardar pesada" class="btn-primary" />
+                    <button name="save_second" type="object" states="first" string="Guardar pesada" class="btn-primary" />
+                    <button name="%(wobin_bascula.report_ticket)d" states="second" string="Imprimir pesada" type="action" class="btn-primary" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,first,second" />
+                </header>
+                <sheet>
+                    <group>
+                        <h1>
+                            <field name="name" readonly="1" force_save="1" />
+                        </h1>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="company_id" invisible="1" />
+                            <field name="type_ticket" readonly="1"/>
+                            <field name="user"/>
+                            <field name="branch" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                            <field name="product" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="driver" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                    <group>
+                            <group>
+                                <field name="type_vehicle" required="1" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                                <field name="plate_vehicle" required="1" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                            </group>
+                            <group>
+                                <field name="plate_trailer" attrs="{'readonly':[('state', '!=', 'draft')], 'invisible':['|',('type_vehicle', '=', 'van'),('type_vehicle', '=', 'torton')], 'required':['|',('type_vehicle', '=', 'trailer'),('type_vehicle', '=', 'full')]}" />
+                                <field name="plate_second_trailer" attrs="{'readonly':[('state', '!=', 'draft')], 'invisible':[('type_vehicle', '!=', 'full')], 'required':[('type_vehicle', '=', 'full')]}" />
+                            </group>
+                    </group>
+                    <notebook>
+                        <page string="Pesadas" name="bascula_page">
+                            <br/>
+                            <group>
+                                <field name="folio" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="first_weight" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                                </group>
+                                <group>
+                                    <field name="first_date"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="second_weight" attrs="{'invisible':[('state', '=', 'draft')], 'readonly':[('state', '=', 'second')]}"/>
+                                </group>
+                                <group>
+                                    <field name="second_date" attrs="{'invisible':[('state', '=', 'draft')]}"/>
+                                </group>
+                            </group>
+                            <group attrs="{'invisible':[('state', '!=', 'second')]}">
+                                <field name="gross_weight"/>
+                                <field name="tare_weight"/>
+                                <field name="net_weight"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="tree_view_ticket_public" model="ir.ui.view">
+        <field name="name">bascula.ticket.tree</field>
+        <field name="model">bascula.ticket</field>
+        <field name="arch" type="xml">
+            <tree string="Boletas" delete="0" default_order="id desc">
+                <field name="name" />
+                <field name="date" />
+                <field name="product" />
+                <field name="net_weight" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="tickets_public_bascula" model="ir.actions.act_window">
+        <field name="name">Boletas publicas</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">bascula.ticket</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('type_ticket','=','public')]</field>
+        <field name="context">{'default_type_ticket': 'public'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+            Click to add a track value.
+            </p>
+        </field>
+    </record>
+
+    <record id="bascula_tree_ticket_public_action" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="tickets_public_bascula" />
+        <field name="view_id" ref="tree_view_ticket_public" />
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="bascula_form_ticket_public_action" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="tickets_public_bascula" />
+        <field name="view_id" ref="form_view_ticket_public" />
+        <field name="view_mode">form</field>
+    </record>
+
+    <menuitem id="bascula_ticket_public_menu" name="Boletas publicas" parent="bascula_root" action="tickets_public_bascula" sequence="2" groups="wobin_bascula.group_bascula_public"/>
+
+    <!--===============================================Ordenes de compra====================================-->
+    
+    <record id="view_purchase_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
+                <page string="Boletas" name="tickets_page">
+                    <field name="tickets_id">
+                        <tree editable="bottom">
+                            <field name="ticket_id" domain="[('operation_type','=','in'),('document_asign','=',False),('state','=','second')]"/>
+                            <field name="product_id"/>
+                            <field name="net_weight"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!--===============================================Ordenes de venta====================================-->
+    
+    <record id="view_sale_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='other_information']" position="before">
+                <page string="Boletas" name="tickets_page">
+                    <field name="tickets_id">
+                        <tree>
+                            <field name="ticket_id"/>
+                            <field name="product_id"/>
+                            <field name="net_weight"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!--===============================================Transferencias====================================-->
+    
+    <record id="view_picking_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='extra']" position="before">
+                <page string="Boletas" name="tickets_page">
+                    <field name="tickets_id">
+                        <tree editable="bottom">
+                            <field name="ticket_id" domain="['|',('operation_type','=','ti'),('operation_type','=','in'),('document_asign','=',False),('state','=','second')]"/>
+                            <field name="product_id"/>
+                            <field name="net_weight"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo> 

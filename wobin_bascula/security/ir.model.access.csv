@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bascula_ticket,access_bascula_ticket,model_bascula_ticket,,1,1,1,0
+access_bascula_analysis,access_bascula_analysis,model_bascula_analysis,,1,1,1,0
+access_bascula_ticket_params,access_bascula_ticket_params,model_bascula_ticket_params,,1,1,1,1
+access_bascula_quality,access_bascula_quality,model_bascula_quality,,1,1,1,1
+access_bascula_quality_params,access_bascula_quality_params,model_bascula_quality_params,,1,1,1,1
+access_bascula_purchase_ticket,access_bascula_purchase_ticket,model_bascula_purchase_ticket,,1,1,1,1
+access_bascula_sale_ticket,access_bascula_sale_ticket,model_bascula_sale_ticket,,1,1,1,1
+access_bascula_picking_ticket,access_bascula_picking_ticket,model_bascula_picking_ticket,,1,1,1,1

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--================================================Analisis de calidad=======================================-->
+    <record model="ir.ui.view" id="form_view_analysis">
+        <field name="name">bascula.analysis.form</field>
+        <field name="model">bascula.analysis</field>
+        <field name="arch" type="xml">
+            <form string="Analisis">
+                <header>
+                    <button name="acept_analysis" type="object" states="draft" string="Aceptar" class="btn-primary" />
+                    <button name="reject_analysis" type="object" states="draft" string="Rechazar" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,accepted" />
+                </header>
+                <sheet>
+                    <group>
+                        <h1>
+                            <field name="name" readonly="1" force_save="1" />
+                        </h1>
+                    </group>
+                    <group>
+                        <field name="user"/>
+                        <field name="branch" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                        <field name="contact" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                        <field name="product_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                        <field name="ticket_id" attrs="{'invisible':[('ticket_id', '=', False)]}"/>
+                        <field name="purchase_id" invisible="True"/>
+                        <field name="quality_id" domain="[('product_id','=',product_id)]" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                    </group>
+                    <group>
+                        <field name="driver" />
+                    </group>
+                    <group>
+                        <group>
+                            <field name="type_vehicle" required="1" attrs="{'readonly':[('purchase_id', '!=', False)]}" />
+                            <field name="plate_vehicle" required="1" attrs="{'readonly':[('purchase_id', '!=', False)]}" />
+                        </group>
+                        <group>
+                            <field name="plate_trailer" attrs="{'readonly':[('purchase_id', '!=', False)], 'invisible':['|',('type_vehicle', '=', 'van'),('type_vehicle', '=', 'torton')], 'required':['|',('type_vehicle', '=', 'trailer'),('type_vehicle', '=', 'full')]}" />
+                            <field name="plate_second_trailer" attrs="{'readonly':[('purchase_id', '!=', False)], 'invisible':[('type_vehicle', '!=', 'full')], 'required':[('type_vehicle', '=', 'full')]}" />
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="humidity" attrs="{'readonly':[('purchase_id', '!=', False)]}"/>
+                            <field name="impurity" attrs="{'readonly':[('purchase_id', '!=', False)]}"/>
+                            <field name="density" attrs="{'readonly':[('purchase_id', '!=', False)]}"/>
+                            <field name="temperature" attrs="{'readonly':[('purchase_id', '!=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="humidity_discount"/>
+                            <field name="impurity_discount"/>
+                        </group>
+                    </group>
+                    <br />
+                    <field name="params_id" attrs="{'readonly':[('purchase_id', '!=', False)]}">
+                        <tree editable="bottom" decoration-danger="value &gt; max_value" delete="0" create="0">
+                            <field name="quality_params_id" readonly="True" force_save="1" />
+                            <field name="max_value" />
+                            <field name="unit" />
+                            <field name="value" />
+                        </tree>
+                    </field>
+                    <group>
+                        <group>
+                            <field name="sum_damage" />
+                        </group>
+                        <group>
+                            <field name="sum_broken" />
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="tree_view_analysis" model="ir.ui.view">
+        <field name="name">bascula.analysis.tree</field>
+        <field name="model">bascula.analysis</field>
+        <field name="arch" type="xml">
+            <tree string="Boletas" delete="0" default_order="id desc">
+                <field name="name" />
+                <field name="date" />
+                <field name="quality_id" />
+                <field name="driver" />
+                <field name="type_vehicle" />
+                <field name="plate_vehicle" />
+                <field name="plate_trailer" />
+                <field name="plate_second_trailer" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="analysis_bascula" model="ir.actions.act_window">
+        <field name="name">Boletas</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">bascula.analysis</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context"></field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+            Click to add a track value.
+            </p>
+        </field>
+    </record>
+
+    <record id="bascula_tree_analysis_action" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="analysis_bascula" />
+        <field name="view_id" ref="tree_view_analysis" />
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="bascula_form_analysis_action" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="analysis_bascula" />
+        <field name="view_id" ref="form_view_analysis" />
+        <field name="view_mode">form</field>
+    </record>
+
+    <menuitem name="Analisis" id="analysis_root" sequence="42" web_icon="wobin_bascula,static/description/analysis_icon.png" groups="wobin_bascula.group_bascula_internal"/>
+
+    <menuitem id="bascula_analysis_menu" name="Analisis" parent="analysis_root" action="analysis_bascula" sequence="1" />
+
+    <!--==========================================Parametros de calidad=======================================-->
+
+    <record model="ir.ui.view" id="form_view_quality">
+        <field name="name">bascula.quality.form</field>
+        <field name="model">bascula.quality</field>
+        <field name="arch" type="xml">
+            <form string="Recepciones">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="product_id" />
+                    </group>
+                    <group>
+                        <field name="params">
+                            <tree string="Quality Tree" editable="bottom">
+                                <field name="name" />
+                                <field name="value" />
+                                <field name="unit" />
+                                <field name="damage" />
+                                <field name="broken" />
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tree_view_quality" model="ir.ui.view">
+        <field name="name">bascula.quality.tree</field>
+        <field name="model">bascula.quality</field>
+        <field name="arch" type="xml">
+            <tree string="Calidad" delete="0" default_order="id desc">
+                <field name="name" />
+                <field name="product_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="bascula_quality" model="ir.actions.act_window">
+        <field name="name">Parametros de calidad</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">bascula.quality</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+            Click para agregar parametros de calidad.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="configuration_menu" name="Configuración" parent="analysis_root" sequence="5"/>
+
+    <menuitem id="quality_menu" name="Parametros de calidad" parent="configuration_menu" action="bascula_quality" sequence="1"/>
+
+
+</odoo>

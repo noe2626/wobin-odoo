@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="wobin_bascula.list">
+      <field name="name">wobin_bascula list</field>
+      <field name="model">wobin_bascula.wobin_bascula</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="wobin_bascula.action_window">
+      <field name="name">wobin_bascula window</field>
+      <field name="res_model">wobin_bascula.wobin_bascula</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="wobin_bascula.action_server">
+      <field name="name">wobin_bascula server</field>
+      <field name="model_id" ref="model_wobin_bascula_wobin_bascula"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="wobin_bascula" id="wobin_bascula.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="wobin_bascula.menu_1" parent="wobin_bascula.menu_root"/>
+    <menuitem name="Menu 2" id="wobin_bascula.menu_2" parent="wobin_bascula.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="wobin_bascula.menu_1_list" parent="wobin_bascula.menu_1"
+              action="wobin_bascula.action_window"/>
+    <menuitem name="Server to list" id="wobin_bascula" parent="wobin_bascula.menu_2"
+              action="wobin_bascula.action_server"/>
+    -->
+  </data>
+</odoo>

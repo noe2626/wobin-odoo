@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--================================Reporte de estado contable======================================-->
+
+    <!--Plantilla-->
+    <template id="report_account_status">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <br />
+                <center>
+                    <label style="width: 100%; text-aling: center; font-size: 30px">
+                        <b>Estado de cuenta</b>
+                    </label>
+                </center>
+                <br />
+                <br />
+                <div style="width: 100%;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="text-align:center; padding: 5px">
+                                Cliente
+                            </td>
+                            <th style="text-align:center; padding: 5px; color: white; background: black; font-size: 18px;">
+                                <t t-esc="docs['partner_id'].name" />
+                            </th>
+                            <td style="text-align:right; padding: 5px">
+                                Ciclo:
+                            </td>
+                            <th style="padding: 5px; width: min-content">
+                                <t t-esc="data['cycle'].name" />
+                            </th>
+                        </tr>
+                    </table>
+                    <br />
+                    <br />
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 50%"></td>
+                            <td style="width: 50%">
+                                <table style="width: 100%; text-align: left;">
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Crédito autorizado
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['authorized']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Seguro agrícola
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['insurance']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Interés seguro agrícola
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['insurance_int']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Interés moratorio seguro agrícola
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['insurance_mo']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Saldo facturas
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['sum_invoices']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Total intereses
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['sum_interest']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Intereses pagados
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="docs['interest_payment']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Tasa fija mensual
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            <t t-esc="data['interest']" />
+                                            %
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Fecha de cálculo
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            <t t-esc="data['date']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Fecha y hora
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            <t t-esc="data['date_now']" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <table style="width: 100%; text-align: left;">
+                                    <tr>
+                                        <th style="text-align:right; color: rgb(18, 110, 214); padding-right: 5px; padding-top: 10px; font-size: 22px">
+                                            Total a pagar
+                                        </th>
+                                        <th style="text-align:center; border: black 2px solid; padding-top: 10px; color: rgb(18, 110, 214); font-size: 22px">
+                                            $
+                                            <t t-esc="data['total']" />
+                                        </th>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <br />
+                    <br />
+                    <table style="width: 100%; text-align: left;">
+                        <tr style="background: gray; color: white">
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Factura
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Fecha
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Total factura
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Fecha de cálculo
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días naturales
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días con interés
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Interés ordinario
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días moratorios
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Interés moratorio
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Suma total a pagar
+                            </th>
+                        </tr>
+                        <tr t-foreach="invoices" t-as="invoice">
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="invoice['number']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="invoice['date']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="invoice['amount']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="invoice['date_payment']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="invoice['days_nat']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="invoice['days_int']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="invoice['interest']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="invoice['days_mo']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="invoice['interest_mo']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="invoice['total']" />
+                            </td>
+                        </tr>
+                    </table>
+                    <br />
+                    <br />
+                    <table style="width: 100%; text-align: left;">
+                        <tr><th colspan="10" style="text-align:center; border: black 1px solid; padding: 5px;">Pagos anticipados</th></tr>
+                        <tr style="background: gray; color: white;">
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Factura
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Total a pagar
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Pago (Abono)
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Fecha de pago
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días pagados
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días naturales
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días con interés
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Interés ordinario
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días moratorios
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Interés moratorio
+                            </th>
+                        </tr>
+                        <tr t-foreach="payments" t-as="payment">
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="payment['invoice']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $<t t-esc="payment['total']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="payment['payment_amount']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="payment['date']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="payment['days']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="payment['days_nat']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="payment['days_int']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="payment['total_int']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="payment['days_mo']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="payment['total_mo']" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <data>
+
+        <!--Reporte-->
+        <report id="report_credit_account_status" model="credit.account.status" string="Estado de cuenta" report_type="qweb-html" name="wobin_credit.report_account_status" />
+
+        <!--Ventana de ingreso de datos-->
+        <record model="ir.ui.view" id="report_data_account_status">
+            <field name="name">Estado de cuenta</field>
+            <field name="model">credit.account.status</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="partner_id" />
+                            <field name="interest_payment" />
+                            <field name="date" />
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Cancel" special="cancel" class="oe_highlight" />
+                        <button name="%(wobin_credit.report_credit_account_status)d" string="Submit" type="action" class="oe_highlight" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!--Accion para la ventana emergente-->
+        <act_window id="action_account_status" name="Selecciona el cliente" res_model="credit.account.status" view_mode="form" target="new" multi="True" />
+
+        <!--Menu-->
+        <menuitem id="menu_account_status" name="Estado de cuenta" parent="wobin_credit.reports_menu" action="action_account_status" />
+
+
+    </data>
+
+    <!-- ========================================Reporte estado contable con pagos=============================-->
+
+    <!--Plantilla-->
+    <template id="report_account_status_payments">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <br />
+                <center>
+                    <label style="width: 100%; text-aling: center; font-size: 30px">
+                        <b>Estado de cuenta</b>
+                    </label>
+                </center>
+                <br />
+                <br />
+                <div style="width: 100%;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="text-align:center; padding: 5px">
+                                Cliente
+                            </td>
+                            <th style="text-align:center; padding: 5px; color: white; background: black; font-size: 18px;">
+                                <t t-esc="docs['partner_id'].name" />
+                            </th>
+                            <td style="text-align:right; padding: 5px">
+                                Ciclo:
+                            </td>
+                            <th style="padding: 5px; width: min-content">
+                                <t t-esc="data['cycle'].name" />
+                            </th>
+                        </tr>
+                    </table>
+                    <br />
+                    <br />
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 50%"></td>
+                            <td style="width: 50%">
+                                <table style="width: 100%; text-align: left;">
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Crédito autorizado
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['authorized']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Seguro agrícola
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['insurance']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Interés seguro agrícola
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['insurance_int']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Interés moratorio seguro agrícola
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['insurance_mo']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Saldo créditos
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['sum_credit']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Total intereses
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['sum_interest']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Intereses pagados
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="docs['interest_payment']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Tasa fija mensual
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            <t t-esc="data['interest']" />
+                                            %
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Fecha de cálculo
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            <t t-esc="data['date']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Fecha y hora
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            <t t-esc="data['date_now']" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:right; padding-right: 5px; padding-top: 10px">
+                                            Saldo pagado
+                                        </th>
+                                        <td style="text-align:center; border-bottom: black 1px solid; padding-top: 10px">
+                                            $
+                                            <t t-esc="data['sum_debit']" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <table style="width: 100%; text-align: left;">
+                                    <tr>
+                                        <th style="text-align:right; color: rgb(18, 110, 214); padding-right: 5px; padding-top: 10px; font-size: 22px">
+                                            Total a pagar
+                                        </th>
+                                        <th style="text-align:center; border: black 2px solid; padding-top: 10px; color: rgb(18, 110, 214); font-size: 22px">
+                                            $
+                                            <t t-esc="data['total']" />
+                                        </th>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <br />
+                    <br />
+                    <table style="width: 100%; text-align: left;">
+                        <tr style="background: gray; color: white">
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Prestamo
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Fecha
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Total pago
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Adeudo
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Fecha de cálculo
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días naturales
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días con interés
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Interés ordinario
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días moratorios
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Interés moratorio
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Suma total a pagar
+                            </th>
+                        </tr>
+                        <tr t-foreach="payments_credit" t-as="credit">
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="credit['name']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="credit['date']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="credit['amount']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="credit['amount_residual']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="credit['date_payment']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="credit['days_nat']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="credit['days_int']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="credit['interest']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="credit['days_mo']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="credit['interest_mo']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="credit['total']" />
+                            </td>
+                        </tr>
+                    </table>
+                    <br />
+                    <br />
+                    <table style="width: 100%; text-align: left;">
+                        <tr><th colspan="10" style="text-align:center; border: black 1px solid; padding: 5px;">Pagos</th></tr>
+                        <tr style="background: gray; color: white;">
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Prestamo
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Pago
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Pago (Abono)
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Fecha de pago
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días naturales
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días con interés
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Interés ordinario
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Días moratorios
+                            </th>
+                            <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                Interés moratorio
+                            </th>
+                        </tr>
+                        <tr t-foreach="payments_debit" t-as="payment">
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="payment['credit']" /> 
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="payment['name']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $<t t-esc="payment['amount']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="payment['date']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="payment['days_nat']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="payment['days_int']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="payment['interest']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                <t t-esc="payment['days_mo']" />
+                            </td>
+                            <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                $
+                                <t t-esc="payment['interest_mo']" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <data>
+
+        <!--Reporte-->
+        <report id="report_credit_account_status_payments" model="credit.account.status.payments" string="Estado de cuenta" report_type="qweb-html" name="wobin_credit.report_account_status_payments" />
+
+        <!--Ventana de ingreso de datos-->
+        <record model="ir.ui.view" id="report_data_account_status_payments">
+            <field name="name">Estado de cuenta</field>
+            <field name="model">credit.account.status.payments</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="partner_id" />
+                            <field name="interest_payment" />
+                            <field name="date" />
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Cancel" special="cancel" class="oe_highlight" />
+                        <button name="%(wobin_credit.report_credit_account_status_payments)d" string="Submit" type="action" class="oe_highlight" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!--Accion para la ventana emergente-->
+        <act_window id="action_account_status_payments" name="Selecciona el cliente" res_model="credit.account.status.payments" view_mode="form" target="new" multi="True" />
+
+        <!--Menu-->
+        <menuitem id="menu_account_status_payments" name="Estado de cuenta con pagos" parent="wobin_credit.reports_menu" action="action_account_status_payments" />
+
+    </data> 
+
+
+</odoo>

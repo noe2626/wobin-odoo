@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="menu_reports" name="Informes" parent="wobin_bascula.bascula_root" sequence="2" />
+
+        <!--================================Reporte de calidad humedad ponderada============================================-->
+
+        <!--Plantilla-->
+        <template id="report_bascula_avg_humidity">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div style="width: 100%;">
+                        <table style="width: 100%; text-align: left;">
+                            <tr style="border: black 1px solid">
+                                <th colspan="3" style="text-align:center; border: black 1px solid; padding: 5px">AUDITORIA DE HUMEDAD</th>
+                            </tr>
+                            <tr style="height: 40px"></tr>
+                            <tr style="border: black 1px solid">
+                                <td>
+                                    
+                                </td>
+                                <td style="text-align:right; padding: 5px">
+                                    FECHA DE AUDITORIA
+                                </td>
+                                <td style="text-align:center; padding: 5px">
+                                    <t t-esc="report_data['today']" />
+                                </td>
+                            </tr>
+                            <tr style="height: 40px"></tr>
+                            <tr style="border: black 1px solid">
+                                <td style="border: black 1px solid; padding: 5px">
+                                    PRODUCTO
+                                </td>
+                                <td style="border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['product']" />
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr style="border: black 1px solid">
+                                <td style="border: black 1px solid; padding: 5px">
+                                    SUCURSAL
+                                </td>
+                                <td t-if="report_data['branch'] == 'cas'" style="border: black 1px solid; padding: 5px">
+                                    SILOS EL CASTILLO
+                                </td>
+                                <td t-if="report_data['branch'] == 'aca'" style="border: black 1px solid; padding: 5px">
+                                    ACATIC
+                                </td>
+                                <td t-if="report_data['branch'] == 'oli'" style="border: black 1px solid; padding: 5px">
+                                    SILOS OLIVARES
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr style="border: black 1px solid">
+                                <td style="border: black 1px solid; padding: 5px">
+                                    PERIODO
+                                </td>
+                                <td style="border: black 1px solid; padding: 5px">
+                                    DE <t t-esc="report_data['i_date']" /> A <t t-esc="report_data['e_date']" />
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr style="height: 40px"></tr>
+                            <tr style="border: black 1px solid">
+                                <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                    RESUMEN
+                                </th>
+                                <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                    PESO NETO (KILOS)
+                                </th>
+                                <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                    HUMEDAD PROMEDIO PONDERADA
+                                </th>
+                            </tr>
+                            <tr style="border: black 1px solid">
+                                <td style="border: black 1px solid; padding: 5px">
+                                    ENTRADAS
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['sum_net_receipt']" />
+                                </td>
+                                <td style="text-align:right; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['avg_humidity_receipt']" />%
+                                </td>
+                            </tr>
+                            <tr style="border: black 1px solid">
+                                <td style="border: black 1px solid; padding: 5px">
+                                    SALIDAS
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['sum_net_delivery']" />
+                                </td>
+                                <td style="text-align:right; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['avg_humidity_delivery']" />%
+                                </td>
+                            </tr>
+                            <tr style="border: black 1px solid">
+                                <td style="border: black 1px solid; padding: 5px">
+                                    MERMA PESO NETO
+                                </td>
+                                <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['dif_net']" />
+                                </th>
+                                <th style="text-align:right; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['dif_avg']" />%
+                                </th>
+                            </tr>
+                            <tr style="height: 40px"></tr>
+                            <tr style="border: black 1px solid">
+                                <td style="border: black 1px solid; padding: 5px">
+                                    DESCUENTOS HUMEDAD
+                                </td>
+                                <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['sum_humidity']" />
+                                </th>
+                                <td></td>
+                            </tr>
+                            <tr style="height: 40px"></tr>
+                            <tr style="border: black 1px solid">
+                                <td style="border: black 1px solid; padding: 5px">
+                                    MERMA PESO NETO ANALIZADO
+                                </td>
+                                <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['dif_merma']" />
+                                </th>
+                                <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['avg_merma']" />%
+                                </th>
+                            </tr>
+                            <tr style="height: 160px"></tr>
+                            <tr>
+                                <td style="border-top: black 1px solid; text-align: center; padding: 5px">
+                                    AUDITOR
+                                </td>
+                                <td>
+                                </td>
+                                <td style="border-top: black 1px solid; text-align: center; padding: 5px">
+                                    RESPONSABLE DE ALMACEN
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br />
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/><br/>
+                    <div style="width: 100%;">
+                        <table style="width: 100%; text-align: left;">
+                            <tr>
+                                <th colspan="4" style="text-align:center; border: black 1px solid; padding: 5px">KARDEX</th>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="text-align:center; border: black 1px solid; padding: 5px">
+                                    DEL 
+                                    <t t-esc="report_data['i_date']" />
+                                    AL 
+                                    <t t-esc="report_data['e_date']" />
+                                </td>
+                            </tr>
+                            <tr style="height: 40px"></tr>
+                            <tr>
+                                <th colspan="4" style="text-align:center; border: black 1px solid; padding: 5px">ENTRADAS</th>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    BOLETA
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    FECHA
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    PESO NETO (KILOS)
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    % HUMEDAD
+                                </td>
+                            </tr>
+                            <tr t-foreach="receipts" t-as="receipt">
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="receipt['name']" />
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="receipt['date']" />
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="receipt['net_weight']" />
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="receipt['humidity']" />%
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="4" style="text-align:center; border: black 1px solid; padding: 5px">ENTRADAS TRANSFERENCIA</th>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    BOLETA
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    FECHA
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    PESO NETO (KILOS)
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    % HUMEDAD
+                                </td>
+                            </tr>
+                            <tr t-foreach="receipts_transfer" t-as="receipt">
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="receipt['name']" />
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="receipt['date']" />
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="receipt['net_weight']" />
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="receipt['humidity']" />%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                </td>
+                                <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['sum_net_receipt']" />
+                                </th>
+                                <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['avg_humidity_receipt']" />%
+                                </th>
+                            </tr>
+                            <tr style="height: 40px"></tr>
+                            <tr>
+                                <th colspan="4" style="text-align:center; border: black 1px solid; padding: 5px">SALIDAS</th>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    BOLETA
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    FECHA
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    PESO NETO (KILOS)
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    % HUMEDAD
+                                </td>
+                            </tr>
+                            <tr t-foreach="deliveries" t-as="delivery">
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="delivery['name']" />
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="delivery['date']" />
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="delivery['net_weight']" />
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="delivery['humidity']" />%
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="4" style="text-align:center; border: black 1px solid; padding: 5px">SALIDAS TRANSFERENCIA</th>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    BOLETA
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    FECHA
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    PESO NETO (KILOS)
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    % HUMEDAD
+                                </td>
+                            </tr>
+                            <tr t-foreach="deliveries_transfer" t-as="delivery">
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="delivery['name']" />
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="delivery['date']" />
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="delivery['net_weight']" />
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="delivery['humidity']" />%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                </td>
+                                <td style="text-align:center; border: black 1px solid; padding: 5px">
+                                </td>
+                                <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['sum_net_delivery']" />
+                                </th>
+                                <th style="text-align:center; border: black 1px solid; padding: 5px">
+                                    <t t-esc="report_data['avg_humidity_delivery']" />%
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <!--Reporte-->
+        <report id="report_bascula_quality_avg_humidity" model="bascula.quality.avg.humidity" string="Reporte humedad ponderada" report_type="qweb-html" name="wobin_bascula.report_bascula_avg_humidity" />
+
+        <!--Ventana de ingreso de datos-->
+        <record model="ir.ui.view" id="report_bascula_data_avg_humidity">
+            <field name="name">report_bascula_avg_humidity</field>
+            <field name="model">bascula.quality.avg.humidity</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="product" />
+                            <field name="branch" />
+                        </group>
+                        <group>
+                            <field name="init_date" />
+                            <field name="end_date" />
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Cancel" special="cancel" class="oe_highlight" />
+                        <button name="%(wobin_bascula.report_bascula_quality_avg_humidity)d" string="Submit" type="action" class="oe_highlight" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!--Accion para la ventana emergente-->
+        <act_window id="action_bascula_avg_humidity" name="Selecciona el intervalo del reporte" res_model="bascula.quality.avg.humidity" view_mode="form" target="new" multi="True" />
+
+        <!--Menu-->
+        <menuitem id="menu_avg_humidity" name="Promedio ponderado humedad" parent="menu_reports" action="action_bascula_avg_humidity" groups="wobin_bascula.group_bascula_internal"/>
+
+
+    </data>
+
+
+</odoo>

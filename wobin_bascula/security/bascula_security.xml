@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record model="ir.module.category" id="module_category_bascula_management">
+            <field name="name">Bascula</field>
+            <field name="description">Bascula</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="group_bascula_internal" model="res.groups">
+            <field name="name">Interno </field>
+            <field name="comment">Usuario con acceso a análisis y boletas externas e internas</field>
+            <field name="category_id" ref="module_category_bascula_management"/>
+        </record>
+
+        <record id="group_bascula_public" model="res.groups">
+            <field name="name">Público</field>
+            <field name="comment">Usuario con acceso a boletas públicas</field>
+            <field name="category_id" ref="module_category_bascula_management"/>
+        </record>
+
+        <record id="group_bascula_cancel" model="res.groups">
+            <field name="name">Cancelar</field>
+            <field name="comment">Usuario con acceso a cancelación de boletas</field>
+            <field name="category_id" ref="module_category_bascula_management"/>
+        </record>
+
+        <record id="bascula_ticket_company_rule" model="ir.rule">
+            <field name="name">Bascula multi company rule</field>
+            <field name="model_id" ref="model_bascula_ticket"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="bascula_analysis_company_rule" model="ir.rule">
+            <field name="name">Analisis multi company rule</field>
+            <field name="model_id" ref="model_bascula_analysis"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+</odoo>

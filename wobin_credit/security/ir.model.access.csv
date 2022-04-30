@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_credit_preapplication,access_credit_preapplication,model_credit_preapplication,,1,1,1,1
+access_credit_parameters,access_credit_parameters,model_credit_parameters,,1,1,1,1
+access_credit_types,access_credit_types,model_credit_types,,1,1,1,1
+access_credit_cycles,access_credit_cycles,model_credit_cycles,,1,1,1,1
+access_credit_crop_type,access_credit_crop_type,model_credit_crop_type,,1,1,1,1

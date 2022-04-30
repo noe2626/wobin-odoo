@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <record model="ir.ui.view" id="form_view_preapplication">
+            <field name="name">credit.preapplication.form</field>
+            <field name="model">credit.preapplication</field>
+            <field name="arch" type="xml">
+                <form string="Pre-aplicaciones">
+                    <header>
+                        <button name="lock_credit" type="object" states="draft" string="Bloquear" class="btn-primary" />
+                        <button name="unlock_credit" type="object" states="locked" string="Desbloquear" groups='wobin_credit.group_credit_manager'/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,locked" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                        </group>
+                        <group>
+                            <field name="partner_id" attrs="{'readonly':[('state', '=', 'locked')]}"/>
+                            <field name="cycle" attrs="{'readonly':[('state', '=', 'locked')]}"/>
+                            <field name="calculated_amount"/>
+                            <field name="requested_amount" attrs="{'readonly':[('state', '=', 'locked')]}"/>
+                            <field name="authorized_amount" attrs="{'readonly':[('state', '=', 'locked')]}"/>
+                            <field name="insurance" />
+                            <field name="credit_type_id" attrs="{'readonly':[('state', '=', 'locked')]}"/>
+                            <field name="payment_terms" />
+                            <field name="date_limit_flag" invisible='1'/>
+                            <field name="date_limit" attrs="{'invisible':[('date_limit_flag', '=', False)], 'readonly':[('state', '=', 'locked')]}" />
+                            <field name="interest" />
+                            <field name="interest_mo" />
+                            <field name="crop_type_ids" attrs="{'readonly':[('state', '=', 'locked')]}">
+                                <tree editable="bottom">
+                                    <field name="crop_method" />
+                                    <field name="crop_type_id" />
+                                    <field name="hectares" />
+                                    <field name="calculated_amount" />
+                                    <field name="calculated_insurance" />
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="tree_view_preapplication" model="ir.ui.view">
+            <field name="name">credit.preapplication.tree</field>
+            <field name="model">credit.preapplication</field>
+            <field name="arch" type="xml">
+                <tree string="Pre-aplicaciones" delete="0" default_order="id desc">
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="requested_amount" />
+                    <field name="authorized_amount" />
+                    <field name="credit_type_id" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="credit_preapplication" model="ir.actions.act_window">
+            <field name="name">Pre-aplicaciones</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">credit.preapplication</field>
+            <field name="view_type">form</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to add a pre-appilcation.
+                </p>
+            </field>
+        </record>
+
+        <record id="credit_tree_preapplication_action" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="credit_preapplication" />
+            <field name="view_id" ref="tree_view_preapplication" />
+            <field name="view_mode">tree</field>
+        </record>
+
+        <record id="credit_form_preapplication_action" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="credit_preapplication" />
+            <field name="view_id" ref="form_view_preapplication" />
+            <field name="view_mode">form</field>
+        </record>
+
+        <menuitem id="preapplication_menu" name="Pre-aplicaciones" parent="wobin_credit.preapplication_main_menu" action="credit_preapplication" sequence="1" />
+
+    </data>
+
+    <!--===================================Campos para relacionar abonos==================================-->
+
+    <record id="view_credit_payment" model="ir.ui.view">
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_transaction_id']" position="after">
+                <field name="is_payment" />
+                <field name="payment_credit_id" attrs="{'invisible':[('is_payment', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+
+</odoo>

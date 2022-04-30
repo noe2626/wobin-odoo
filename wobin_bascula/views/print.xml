@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="print_ticket">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <t t-foreach="docs" t-as="ticket">
+                    <table style="width: 50%; text-align: left;">
+                        <tr>
+                            <th style="width: 20%;">
+                                    Folio:</th>
+                        </tr>
+                        <tr>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['ticket'].name" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">
+                                    Usuario:</th>
+                        </tr>
+                        <tr>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['ticket'].user" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">
+                                    Operador:</th>
+                        </tr>
+                        <tr>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['ticket'].driver" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%; margin-top: 10px">
+                                    Placas unidad:</th>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['ticket'].plate_vehicle" />
+                            </td>
+                        </tr>
+                        <tr t-if="ticket['ticket'].type_vehicle == 'trailer' or ticket['ticket'].type_vehicle == 'full'">
+                            <th style="width: 20%;">
+                                    Placas trailer:</th>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['ticket'].plate_trailer" />
+                            </td>
+                        </tr>
+                        <tr t-if="ticket['ticket'].type_vehicle == 'full'">
+                            <th style="width: 20%;">
+                                    Placas segundo trailer:</th>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['ticket'].plate_second_trailer" />
+                            </td>
+                        </tr>
+                        <tr t-if="ticket['ticket'].type_vehicle == 'full'">
+                            <th style="width: 20%;">
+                                    Producto:</th>
+                        </tr>
+                        <tr t-if="ticket['ticket'].type_vehicle == 'full'">
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['ticket'].product" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">
+                                    Folio báscula:</th>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['ticket'].folio" />
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width: 50%; text-align: left; margin-top: 10px;">
+                        <tr>
+                            <th style="width: 20%;">
+                                    Primer pesada</th>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">
+                                    Fecha y hora:</th>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['first_date']" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">
+                                    Peso:</th>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['first_weight']" />
+                                Kg
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width: 50%; text-align: left; margin-top: 10px;">
+                        <tr>
+                            <th style="width: 20%;">
+                                    Segunda pesada pesada</th>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">
+                                    Fecha y hora:</th>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['second_date']" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">
+                                    Peso:</th>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['second_weight']" />
+                                Kg
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width: 50%; text-align: left; margin-top: 10px;">
+                        <tr>
+                            <th style="width: 20%;">
+                                    Pero bruto:</th>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['gross_weight']" />
+                                Kg
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">
+                                    Peso tara:</th>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['tare_weight']" />
+                                Kg
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">
+                                    Peso neto:</th>
+                            <td style="width: 30%;">
+                                <t t-esc="ticket['net_weight']" />
+                                Kg
+                            </td>
+                        </tr>
+                    </table>
+                    <br />
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <report id="report_ticket" string="Imprimir pesada" model="bascula.ticket" report_type="qweb-html" name="wobin_bascula.print_ticket" menu="False" />
+
+    <!--========================================Impresión de formato con analisis==================================-->
+
+    <template id="print_ticket_external">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="ticket">
+                    <br />
+                    <div style="width: 100%;">
+                        <table style="width: 100%; text-align: left;">
+                            <tr>
+                                <th style="width: 20%; padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    BOLETA</th>
+                                <td style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black; font-size: 20px;">
+                                    <t t-esc="ticket['ticket'].name" />
+                                </td>
+                                <td rowspan="9" style="width: 50%;  padding-top: 5px; padding-bottom: 5px;">
+                                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 20%; padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    TIPO DE OPERACIÓN</th>
+                                <td t-if="ticket['ticket'].operation_type == 'in'" style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    ENTRADA
+                                </td>
+                                <td t-if="ticket['ticket'].operation_type == 'out'" style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    SALIDA
+                                </td>
+                                <td t-if="ticket['ticket'].operation_type == 'ti'" style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    TRANSFERENCIA INTERNA
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 20%; padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    SUCURSAL</th>
+                                <td t-if="ticket['ticket'].branch == 'cas'" style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    SILOS EL CASTILLO
+                                </td>
+                                <td t-if="ticket['ticket'].branch == 'aca'" style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    ACATIC
+                                </td>
+                                <td t-if="ticket['ticket'].branch == 'oli'" style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    SILOS OLIVARES
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 20%; padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    CONTACTO</th>
+                                <td style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    <t t-esc="ticket['ticket'].contact" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 20%; padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    PRODUCTO</th>
+                                <td style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    <t t-esc="ticket['ticket'].product" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 20%; padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    CHOFER</th>
+                                <td style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    <t t-esc="ticket['ticket'].driver" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 20%; padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    PLACAS UNIDAD</th>
+                                <td style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    <t t-esc="ticket['ticket'].plate_vehicle" />
+                                </td>
+                            </tr>
+                            <tr t-if="ticket['ticket'].type_vehicle == 'trailer' or ticket['ticket'].type_vehicle == 'full'">
+                                <th style="width: 20%; padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    PLACAS TRAILER</th>
+                                <td style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    <t t-esc="ticket['ticket'].plate_trailer" />
+                                </td>
+                            </tr>
+                            <tr t-if="ticket['ticket'].type_vehicle == 'full'">
+                                <th style="width: 20%; padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    PLACAS SEGUNDO TRAILER</th>
+                                <td style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    <t t-esc="ticket['ticket'].plate_second_trailer" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 20%; padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    PESADOR</th>
+                                <td style="width: 30%;  padding-top: 5px; padding-bottom: 5px; border-bottom: solid 1px black;">
+                                    <t t-esc="ticket['ticket'].user" />
+                                </td>
+                            </tr>
+                            
+                        </table>
+                    </div>
+
+                    <br />
+                    <div style="width: 100%; padding-top: 60px;">
+                        <table style="width: 100%; text-align: center;">
+                            <tr>
+                                <th style="width: 33%;">
+                                    <div style="width: 94%; margin-left: 3%; margin-right: 3%; border-top: black 1px solid;">
+                                        FIRMA OPERADOR</div>
+                                </th>
+                                <th style="width: 33%; ">
+                                    <div style="width: 94%; margin-left: 3%; margin-right: 3%; border-top: black 1px solid;">
+                                        FIRMA PESADOR</div>
+                                </th>
+                                <th style="width: 33%; ">
+                                    <div style="width: 94%; margin-left: 3%; margin-right: 3%; border-top: black 1px solid;">
+                                        SELLO BODEGA</div>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+
+                    <div style="display: flex; width: 100%;">
+                        <table style="width: 100%; font-size: 15px;">
+                            <tr>
+                                <th style="width: 20%; padding-top: 5px; padding-bottom: 5px; padding-left: 10px;">
+                                    ANÁLISIS</th>
+                                <td style="width: 30%;  padding-top: 5px; padding-bottom: 5px;">
+                                    <t t-esc="ticket['ticket'].analysis_id.name" />
+                                </td>
+                                <td style="width: 50%;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; width: 50%;">
+                                    <table style="width: 100%; text-align: left;">
+                                        <tr>
+                                            <th style="border: black 1px solid; padding-left: 5px; width: 20%;">NORMA</th>
+                                            <td colspan="2" style="border: black 1px solid; padding-left: 5px;">
+                                                <t t-esc="ticket['ticket'].quality_id.name" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="width: 100%; text-align: left; margin-top: 10px;">
+                                        <tr>    
+                                            <th colspan="3" style="border: black 1px solid; padding-left: 5px;">
+                                                GRANOS DAÑADOS
+                                            </th>
+                                        </tr>
+                                        <t t-foreach="ticket['ticket'].params_id" t-as="param">
+                                            <tr t-if="param.quality_params_id.damage == True">
+                                                <td style="border: black 1px solid; padding-left: 5px;">
+                                                    <t t-esc="param.quality_params_id.name" />
+                                                </td>
+                                                <td style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px; width: 25%;">
+                                                    <t t-esc="param.value" />
+                                                </td>
+                                                <td style="border: black 1px solid; padding-left: 5px; width: 15%;">
+                                                    <t t-esc="param.unit" />
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <tr>    
+                                            <th style="border: black 1px solid; padding-left: 5px;">
+                                                SUMA DE DAÑOS
+                                            </th>
+                                            <th style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px;">
+                                                <t t-esc="ticket['sum_damage']" />
+                                            </th>
+                                            <th style="border: black 1px solid; padding-left: 5px;">
+                                                %
+                                            </th>
+                                        </tr>
+                                    </table>
+                                    <table style="width: 100%; text-align: left; margin-top: 10px;">
+                                        <t t-foreach="ticket['ticket'].params_id" t-as="param">
+                                            <tr t-if="param.quality_params_id.damage == False">
+                                                <td style="border: black 1px solid; padding-left: 5px;">
+                                                    <t t-esc="param.quality_params_id.name" />
+                                                </td>
+                                                <td style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px; width: 25%;">
+                                                    <t t-esc="param.value" />
+                                                </td>
+                                                <td style="border: black 1px solid; padding-left: 5px; width: 15%;">
+                                                    <t t-esc="param.unit" />
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </td>
+                                <td style="padding: 10px; width: 50%;">
+                                    <table style="width: 100%; text-align: left;">
+                                        <tr>
+                                            <th style="border: black 1px solid; padding-left: 5px; width: 50%;">DENSIDAD</th>
+                                            <td style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px;">
+                                                <t t-esc="ticket['density']" />
+                                            </td>
+                                            <td style="border: black 1px solid; padding-left: 5px; width: 15%;">g/L</td>
+                                        </tr>
+                                        <tr>
+                                            <th style="border: black 1px solid; padding-left: 5px; width: 50%;">TEMPERATURA</th>
+                                            <td style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px;">
+                                                <t t-esc="ticket['temperature']" />
+                                            </td>
+                                            <td style="border: black 1px solid; padding-left: 5px; width: 15%;">°C</td>
+                                        </tr>
+                                    </table>
+                                    <table style="width: 100%; text-align: left; margin-top: 20px;">
+                                        <tr>
+                                            <th style="border: black 1px solid; padding-left: 5px; width: 50%;">
+                                                PESO NETO
+                                            </th>
+                                            <td colspan="3" style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px;">
+                                                <t t-esc="ticket['net_weight']" />
+                                            </td>
+                                            <td style="border: black 1px solid; padding-left: 5px; width: 15%;">
+                                                Kg
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="width: 100%; text-align: left; margin-top: 20px;">
+                                        <tr>
+                                            <th colspan="5" style="padding-left: 5px; border: black 1px solid;">
+                                                DESCUENTOS
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: black 1px solid; padding-left: 5px; width: 50%;">HUMEDAD</td>
+                                            <td style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px;">
+                                                <t t-esc="ticket['humidity']" />
+                                            </td>
+                                            <td style="border: black 1px solid; padding-left: 5px;">%</td>
+                                            <td style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px;">
+                                                <t t-esc="ticket['humidity_total_discount']" />
+                                            </td>
+                                            <td style="border: black 1px solid; padding-left: 5px; width: 15%;">Kg</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: black 1px solid; padding-left: 5px; width: 50%;">IMPUREZA</td>
+                                            <td style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px;">
+                                                <t t-esc="ticket['impurity']" />
+                                            </td>
+                                            <td style="border: black 1px solid; padding-left: 5px;">%</td>
+                                            <td style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px;">
+                                                <t t-esc="ticket['impurity_total_discount']" />
+                                            </td>
+                                            <td style="border: black 1px solid; padding-left: 5px; width: 15%;">Kg</td>
+                                        </tr>
+                                        <tr>
+                                            <th style="border: black 1px solid; padding-left: 5px; width: 50%;">SUMA DESCUENTOS</th>
+                                            <th style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px;">
+                                                <t t-esc="ticket['total_discount_p']" />
+                                            </th>
+                                            <th style="border: black 1px solid; padding-left: 5px;">%</th>
+                                            <th style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px;">
+                                                <t t-esc="ticket['total_discount']" />
+                                            </th>
+                                            <th style="border: black 1px solid; padding-left: 5px; width: 15%;">Kg</th>
+                                        </tr>
+                                    </table>
+                                    <table style="width: 100%; text-align: left; margin-top: 20px;">
+                                        <tr>
+                                            <th style="border: black 1px solid; padding-left: 5px; width: 50%;">PESO NETO ANALIZADO</th>
+                                            <th colspan="3" style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px;">
+                                                <t t-esc="ticket['total_format']" />
+                                            </th>
+                                            <th style="border: black 1px solid; padding-left: 5px; width: 15%;">Kg</th>
+                                        </tr>
+                                    </table>
+                                    <table style="width: 100%; text-align: left; margin-top: 20px;">
+                                        <tr t-if="ticket['ticket'].operation_type == 'in'">
+                                            <th style="border: black 1px solid; padding-left: 5px; width: 50%;">PRECIO</th>
+
+                                            <td style="border: black 1px solid; padding-left: 5px; text-align: right; padding-right: 5px;">
+                                                $
+                                                <t t-esc="ticket['ticket'].price" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <report id="report_ticket_external" string="Imprimir boleta" model="bascula.ticket" report_type="qweb-html" name="wobin_bascula.print_ticket_external" menu="False" />
+
+    
+</odoo>
